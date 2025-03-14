@@ -24,6 +24,7 @@
                     <th>Deskripsi</th>
                     <th>Stok</th>
                     <th>Aksi</th>
+                    <th>Gambar</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +44,16 @@
                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                         </form>
                     </td>
+                    <td>
+    @if ($product->gambar)
+    <img src="{{ Storage::url($product->gambar) }}" width="100" alt="Gambar Produk">
+
+
+    @else
+        Tidak ada gambar
+    @endif
+</td>
+
                 </tr>
                 @empty
                 <tr>

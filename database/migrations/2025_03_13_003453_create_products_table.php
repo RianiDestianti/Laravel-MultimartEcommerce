@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('harga');
             $table->text('deskripsi')->nullable();
             $table->integer('stok');
+            $table->string('gambar')->nullable(); 
             $table->timestamps();
         });
         
@@ -29,4 +30,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('products');
     }
+    
 };

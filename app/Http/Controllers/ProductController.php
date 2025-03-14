@@ -33,17 +33,37 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'nama_produk' => 'required',
             'harga' => 'required|numeric',
             'deskripsi' => 'required',
-            'stok' => 'required|integer',
+            'stok' => 'required|numeric',
+            
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        
-        Product::create($request->all());
+    
+        // Inisialisasi variabel gambar
+        $gambarPath = null;
+    
+        // Jika ada gambar yang diupload, simpan
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('uploads', 'public');
+        }
+    
+        // Simpan data ke databas~e
+        Product::create([
+            'nama_produk' => $request->nama_produk,
+            'harga' => $request->harga,
+            'deskripsi' => $request->deskripsi,
+            'stok' => $request->stok,
+            'gambar' => $gambarPath, // Path gambar disimpan di database
+        ]);
+    
         return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan!');
-        
     }
+    
+
 
     /**
      * Display the specified resource.
@@ -69,13 +89,31 @@ public function update(Request $request, $id)
         'harga' => 'required|numeric',
         'deskripsi' => 'required',
         'stok' => 'required|integer',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
     ]);
 
     $product = Product::findOrFail($id);
-    $product->update($request->all());
+
+    // Jika ada gambar baru, simpan dan hapus yang lama
+    if ($request->hasFile('gambar')) {
+        if ($product->gambar) {
+            \Storage::disk('public')->delete($product->gambar);
+        }
+        $gambarPath = $request->file('gambar')->store('uploads', 'public');
+        $product->gambar = $gambarPath;
+    }
+
+    // Update data lain
+    $product->update([
+        'nama_produk' => $request->nama_produk,
+        'harga' => $request->harga,
+        'deskripsi' => $request->deskripsi,
+        'stok' => $request->stok,
+    ]);
 
     return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
 }
+
 
 
     /**
