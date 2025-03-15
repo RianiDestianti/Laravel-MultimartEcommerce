@@ -39,7 +39,6 @@ class ProductController extends Controller
             'harga' => 'required|numeric',
             'deskripsi' => 'required',
             'stok' => 'required|numeric',
-            
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
     
