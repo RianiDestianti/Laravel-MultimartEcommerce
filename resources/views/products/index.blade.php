@@ -2,7 +2,13 @@
 
 @section('title', 'Daftar Produk')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+@endsection
+
 @section('content')
+
+
 <div class="container mt-5">
     <!-- Page Header with Gradient Underline -->
     <div class="page-header text-center mb-4">

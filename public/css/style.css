@@ -1,0 +1,44 @@
+/* Dark Mode Styles */
+.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .navbar {
+    background: linear-gradient(135deg, #1a0732, #621c2c, #8a4e30);
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.dark-mode .card-body {
+    color: #e0e0e0;
+}
+
+.dark-mode .form-control, 
+.dark-mode .form-select {
+    background-color: #2d2d2d;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+.dark-mode .page-header {
+    border-bottom-color: #333;
+}
+
+.dark-mode footer {
+    background-color: #1a1a1a;
+}
+
+/* Dark mode toggle button style */
+#darkModeToggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 15px;
+    padding: 0;
+    color: #fff;
+}
