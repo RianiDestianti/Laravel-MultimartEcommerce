@@ -75,5 +75,12 @@ class AuthController extends Controller
     return redirect()->route('login')->with('success', 'Logout berhasil!');
 }
 
+public function profile()
+{
+    $user = Auth::user(); // Ambil data user yang sedang login
+    return view('products.akun', compact('user'));
+}
+
+
 }
 

@@ -186,7 +186,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-    <a class="nav-link" href="{{ route('products.create') }}">
+    <a class="nav-link" href="{{ route('products.akun') }}">
         <i class="fas fa-user me-1"></i> Akun
     </a>
 </li>

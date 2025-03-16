@@ -21,6 +21,10 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/products/akun', [AuthController::class, 'profile'])->name('products.akun')->middleware('auth');
+
+
+
 // Route::get('/admin/dashboard', function () {
 //     return 'Selamat datang Admin!';
 // })->middleware('auth')->name('admin.dashboard');

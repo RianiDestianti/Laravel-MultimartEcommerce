@@ -9,17 +9,19 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $search = $request->query('search');
-    
-        $products = Product::when($search, function ($query, $search) {
-            return $query->where('nama_produk', 'like', "%{$search}%")
-                         ->orWhere('deskripsi', 'like', "%{$search}%");
-        })->get();
-    
-        $products = Product::paginate(5); // Menampilkan 5 produk per halaman
-        return view('products.index', compact('products'));
+{
+    $query = Product::query();
+
+    if ($request->has('search')) {
+        $search = $request->search;
+        $query->where('nama_produk', 'like', "%$search%");
     }
+
+    $products = $query->paginate(5)->appends(['search' => $request->search]); // Menyimpan parameter search di pagination
+
+    return view('products.index', compact('products'));
+}
+
 
     /**
      * Show the form for creating a new resource.
