@@ -17,6 +17,7 @@ class ProductController extends Controller
                          ->orWhere('deskripsi', 'like', "%{$search}%");
         })->get();
     
+        $products = Product::paginate(5); // Menampilkan 5 produk per halaman
         return view('products.index', compact('products'));
     }
 

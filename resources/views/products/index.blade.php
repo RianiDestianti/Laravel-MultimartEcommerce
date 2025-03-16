@@ -14,6 +14,8 @@
         <a href="{{ route('products.create') }}" class="btn btn-success">+ Tambah Produk</a>
     </div>
 
+    
+
     <!-- Tabel Produk -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped text-center">
@@ -59,6 +61,11 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    
+     <!-- Pagination -->
+     <div class="d-flex justify-content-center mt-3">
+        {{ $products->links() }}
     </div>
 </div>
 @endsection
