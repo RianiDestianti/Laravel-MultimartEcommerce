@@ -76,6 +76,15 @@
             <i class="fas fa-trash me-1"></i>Hapus
         </button>
     </form>
+    <form action="{{ route('orders.store') }}" method="POST">
+    @csrf
+    <input type="hidden" name="product_id" value="{{ $product->id }}">
+    <input type="number" name="jumlah" value="1" min="1" class="form-control mb-2">
+    <button type="submit" class="btn btn-success btn-sm">
+        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+    </button>
+</form>
+
 </td>
 
                         </tr>

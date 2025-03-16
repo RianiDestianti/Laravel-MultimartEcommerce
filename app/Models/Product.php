@@ -12,6 +12,9 @@ class Product extends Model
     protected $table = 'products'; 
 
     protected $fillable = ['nama_produk', 'harga', 'deskripsi', 'stok']; 
-
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
     
 }

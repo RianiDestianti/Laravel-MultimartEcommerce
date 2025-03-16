@@ -186,6 +186,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+    <a class="nav-link" href="{{ route('products.riwayat') }}">
+        <i class="fas fa-receipt"></i> Riwayat Pesanan
+    </a>
+</li>
+
+                    <li class="nav-item">
     <a class="nav-link" href="{{ route('products.akun') }}">
         <i class="fas fa-user me-1"></i> Akun
     </a>
@@ -194,6 +200,13 @@
             </div>
         </div>
     </nav>
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+@if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+@endif
+
    
     <!-- Hero Section (Only on home page) -->
     @if(request()->routeIs('products.index'))

@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
-
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WishlistController;
 
 Route::middleware(['auth'])->group(function () {
@@ -30,7 +30,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/products/akun', [AuthController::class, 'profile'])->name('products.akun')->middleware('auth');
+Route::get('/products/riwayat', [OrderController::class, 'riwayat'])->name('products.riwayat')->middleware('auth');
 
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store')->middleware('auth');
+Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay')->middleware('auth');
 
 
 // Route::get('/admin/dashboard', function () {
