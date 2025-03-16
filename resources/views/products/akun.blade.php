@@ -27,6 +27,9 @@
 
     <div class="mt-3">
         <a href="{{ route('products.index') }}" class="btn btn-primary">Kembali ke Produk</a>
+        <h3>Wishlist Produk</h3>
+<a href="{{ route('wishlist.index') }}" class="btn btn-primary">Lihat Wishlist</a>
+
         <form action="{{ route('logout') }}" method="POST" class="d-inline">
             @csrf
             <button type="submit" class="btn btn-danger">Logout</button>

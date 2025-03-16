@@ -26,6 +26,7 @@
         </a>
     </div>
 
+    
     <!-- Tabel Produk -->
     <div class="card">
         <div class="card-body">
@@ -56,19 +57,27 @@
                                 @endif
                             </td>
                             <td class="align-middle">
-                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning mb-1">
-                                    <i class="fas fa-edit me-1"></i>Edit
-                                </a>
-                                <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                    class="d-inline"
-                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash me-1"></i>Hapus
-                                    </button>
-                                </form>
-                            </td>
+    <form action="{{ route('wishlist.store') }}" method="POST">
+        @csrf
+        <input type="hidden" name="product_id" value="{{ $product->id }}">
+        <button type="submit" class="btn btn-outline-danger btn-sm">
+            <i class="fas fa-heart"></i> Wishlist
+        </button>
+    </form>
+    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning mb-1">
+        <i class="fas fa-edit me-1"></i>Edit
+    </a>
+    <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+        class="d-inline"
+        onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-danger">
+            <i class="fas fa-trash me-1"></i>Hapus
+        </button>
+    </form>
+</td>
+
                         </tr>
                         @empty
                         <tr>
