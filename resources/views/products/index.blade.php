@@ -3,11 +3,11 @@
 @section('title', 'Daftar Produk')
 
 @section('content')
+
+
+
 <div class="container mt-4">
     <h1 class="mb-4 text-center">Daftar Produk</h1>
-
-    <!-- Form Pencarian -->
-    
 
     <!-- Tombol Tambah Produk -->
     <div class="d-flex justify-content-end mb-3">
@@ -45,19 +45,16 @@
                         </form>
                     </td>
                     <td>
-    @if ($product->gambar)
-    <img src="{{ Storage::url($product->gambar) }}" width="100" alt="Gambar Produk">
-
-
-    @else
-        Tidak ada gambar
-    @endif
-</td>
-
+                        @if ($product->gambar)
+                            <img src="{{ Storage::url($product->gambar) }}" width="100" alt="Gambar Produk">
+                        @else
+                            <p>Tidak ada gambar</p>
+                        @endif
+                    </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center">Produk tidak ditemukan</td>
+                    <td colspan="6" class="text-center">Produk tidak ditemukan</td>
                 </tr>
                 @endforelse
             </tbody>

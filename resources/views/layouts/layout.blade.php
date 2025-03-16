@@ -185,16 +185,27 @@
                             <i class="fas fa-plus-circle me-1"></i> Tambah Produk
                         </a>
                     </li>
+                    <li class="nav-item">
+    <a class="nav-link" href="{{ route('products.create') }}">
+        <i class="fas fa-user me-1"></i> Akun
+    </a>
+</li>
                 </ul>
             </div>
         </div>
     </nav>
-
+   
     <!-- Hero Section (Only on home page) -->
     @if(request()->routeIs('products.index'))
     <div class="hero-section">
         <div class="container text-center">
+        @if(session('success'))
+    <p style="color: green;">{{ session('success') }}</p>
+@endif
+
+<h1>Selamat datang, {{ session('user_name') }}</h1>
             <h1 class="display-4 mb-3">Selamat Datang di MultiMart</h1>
+            
             <p class="lead mb-4">Temukan berbagai produk berkualitas dengan harga terbaik</p>
             <form action="{{ route('products.index') }}" method="GET" class="mb-3 d-flex">
         <input type="text" name="search" class="form-control me-2" placeholder="Cari produk..." value="{{ request('search') }}">

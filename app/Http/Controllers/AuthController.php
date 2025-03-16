@@ -41,24 +41,39 @@ class AuthController extends Controller
 
     // Proses login
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+
+        // Simpan data user ke dalam session
+        session([
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_email' => $user->email
         ]);
 
-        if (Auth::attempt($credentials)) {
-            return redirect()->route('products.index')->with('success', 'Login berhasil!');
-        }
-
-        return back()->withErrors(['email' => 'Email atau password salah!']);
+        return redirect()->route('products.index')->with('success', 'Login berhasil!');
     }
+
+    return back()->withErrors(['email' => 'Email atau password salah!']);
+}
 
     // Logout
     public function logout()
-    {
-        Auth::logout();
-        return redirect()->route('login')->with('success', 'Logout berhasil!');
-    }
+{
+    // Hapus semua session
+    session()->flush();
+    
+    // Logout user dari sistem
+    Auth::logout();
+
+    return redirect()->route('login')->with('success', 'Logout berhasil!');
+}
+
 }
 
