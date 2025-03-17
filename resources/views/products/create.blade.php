@@ -27,33 +27,30 @@
         <input type="file" name="gambar" class="form-control" accept="image/*">
     </div>
     <div class="mb-3">
-    <label for="kategori" class="form-label">Kategori</label>
-    <select name="kategori_id" id="kategori" class="form-control">
-
-        <option value="">Pilih Kategori</option>
-        @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->nama_kategori }}</option>
-        @endforeach
-        <option value="new">Tambahkan Kategori Baru</option>
-    </select>
-</div>
-
-<div class="mb-3" id="kategori_baru" style="display: none;">
-    <label for="kategori_baru_input" class="form-label">Nama Kategori Baru</label>
-    <input type="text" name="kategori_baru" id="kategori_baru_input" class="form-control">
-</div>
-
-<script>
-    document.getElementById('kategori').addEventListener('change', function () {
-        if (this.value === 'new') {
-            document.getElementById('kategori_baru').style.display = 'block';
-        } else {
-            document.getElementById('kategori_baru').style.display = 'none';
-        }
-    });
-</script>
-
+        <label for="kategori">Kategori</label>
+        <select name="kategori_id" id="kategori">
+            <option value="">-- Pilih Kategori --</option>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}">{{ $category->nama_kategori }}</option>
+            @endforeach
+            <option value="new">Tambah Kategori Baru</option>
+        </select>
+    </div>
+    <div class="mb-3" id="kategori_baru_container" style="display: none;">
+        <label for="kategori_baru_input" class="form-label">Nama Kategori Baru</label>
+        <input type="text" name="kategori_baru" id="kategori_baru_input" class="form-control">
+    </div>
+    <script>
+        document.getElementById('kategori').addEventListener('change', function () {
+            if (this.value === 'new') {
+                document.getElementById('kategori_baru_container').style.display = 'block';
+            } else {
+                document.getElementById('kategori_baru_container').style.display = 'none';
+            }
+        });
+    </script>
     <button type="submit" class="btn btn-primary">Simpan</button>
 </form>
+
 
 @endsection

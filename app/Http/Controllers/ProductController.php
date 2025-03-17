@@ -36,43 +36,45 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'nama_produk' => 'required|string|max:255',
-        'harga' => 'required|numeric',
-        'deskripsi' => 'required|string',
-        'stok' => 'required|integer',
-        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-        'kategori_id' => 'nullable|exists:categories,id',
-        'kategori_baru' => 'nullable|string|max:255'
-    ]);
-
-    // Cek jika user memilih kategori baru
-    if ($request->kategori_baru) {
-        $kategori = Category::create(['nama_kategori' => $request->kategori_baru]);
-        $kategori_id = $kategori->id;
-    } else {
-        $kategori_id = $request->kategori_id;
+    {
+        $request->validate([
+            'nama_produk' => 'required|string|max:255',
+            'harga' => 'required|numeric',
+            'deskripsi' => 'required|string',
+            'stok' => 'required|integer',
+            'kategori_id' => 'nullable|string',
+            'kategori_baru' => 'nullable|string|max:255',
+        ]);
+    
+        // Cek apakah user menambahkan kategori baru
+        if ($request->kategori_id == "new" && !empty($request->kategori_baru)) {
+            // Simpan kategori baru ke database
+            $kategori = Category::create([
+                'nama_kategori' => $request->kategori_baru
+            ]);
+    
+            // Gunakan ID kategori baru untuk produk
+            $kategori_id = $kategori->id;
+        } else {
+            // Gunakan kategori yang dipilih
+            $kategori_id = $request->kategori_id;
+        }
+    
+        // Simpan produk baru
+        Product::create([
+            'nama_produk' => $request->nama_produk,
+            'harga' => $request->harga,
+            'deskripsi' => $request->deskripsi,
+            'stok' => $request->stok,
+            'kategori_id' => $kategori_id,
+        ]);
+    
+        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan');
     }
+    
+    
 
-    // Simpan gambar jika ada
-    $gambarPath = null;
-    if ($request->hasFile('gambar')) {
-        $gambarPath = $request->file('gambar')->store('public/gambar_produk');
-    }
 
-    // Simpan produk
-    Product::create([
-        'nama_produk' => $request->nama_produk,
-        'harga' => $request->harga,
-        'deskripsi' => $request->deskripsi,
-        'stok' => $request->stok,
-        'gambar' => $gambarPath,
-        'kategori_id' => $kategori_id,
-    ]);
-
-    return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
-}
 
 
     /**
@@ -89,47 +91,47 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nama_produk' => 'required',
-            'harga' => 'required|numeric',
-            'deskripsi' => 'required',
-            'stok' => 'required|integer',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'kategori' => 'nullable|exists:categories,id',
-            'kategori_baru' => 'nullable|string|unique:categories,nama_kategori'
-        ]);
+{
+    $request->validate([
+        'nama_produk' => 'required',
+        'harga' => 'required|numeric',
+        'deskripsi' => 'required',
+        'stok' => 'required|integer',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'kategori_id' => 'nullable|exists:categories,id',
+        'kategori_baru' => 'nullable|string|unique:categories,nama_kategori'
+    ]);
 
-        $product = Product::findOrFail($id);
+    $product = Product::findOrFail($id);
 
-        // Cek jika ada kategori baru
-        if ($request->kategori === 'new' && $request->kategori_baru) {
-            $kategori = Category::create(['nama_kategori' => $request->kategori_baru]);
-            $kategori_id = $kategori->id;
-        } else {
-            $kategori_id = $request->kategori;
-        }
-
-        // Jika ada gambar baru, simpan dan hapus yang lama
-        if ($request->hasFile('gambar')) {
-            if ($product->gambar) {
-                \Storage::disk('public')->delete($product->gambar);
-            }
-            $gambarPath = $request->file('gambar')->store('uploads', 'public');
-            $product->gambar = $gambarPath;
-        }
-
-        // Update produk
-        $product->update([
-            'nama_produk' => $request->nama_produk,
-            'harga' => $request->harga,
-            'deskripsi' => $request->deskripsi,
-            'stok' => $request->stok,
-            'category_id' => $kategori_id,
-        ]);
-
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
+    // Cek jika user memilih kategori baru
+    if ($request->filled('kategori_baru')) { 
+        $kategori = Category::create(['nama_kategori' => $request->kategori_baru]);
+        $kategori_id = $kategori->id;
+    } else {
+        $kategori_id = $request->kategori_id;
     }
+
+    // Jika ada gambar baru, simpan dan hapus yang lama
+    if ($request->hasFile('gambar')) {
+        if ($product->gambar) {
+            \Storage::disk('public')->delete($product->gambar);
+        }
+        $gambarPath = $request->file('gambar')->store('uploads', 'public');
+        $product->gambar = $gambarPath;
+    }
+
+    // Update produk dengan kategori yang benar
+    $product->update([
+        'nama_produk' => $request->nama_produk,
+        'harga' => $request->harga,
+        'deskripsi' => $request->deskripsi,
+        'stok' => $request->stok,
+        'kategori_id' => $kategori_id, // Pastikan kategori_id diperbarui
+    ]);
+
+    return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
+}
 
     /**
      * Remove the specified resource from storage.
