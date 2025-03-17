@@ -25,7 +25,7 @@ Route::get('/products/akun', [AuthController::class, 'profile'])->name('products
 
 Route::get('/categories/{id}/edit', [ProductController::class, 'editCategory'])->name('categories.edit');
 Route::put('/categories/{id}', [ProductController::class, 'updateCategory'])->name('categories.update');
-
+Route::resource('products', ProductController::class);
 
 Route::get('/products/riwayat', [OrderController::class, 'riwayat'])->name('products.riwayat')->middleware('auth');
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store')->middleware('auth');

@@ -22,12 +22,30 @@
     </div>
     @endif
 
+
+    <h2>🔥 Rekomendasi untuk Kamu</h2>
+<div class="row">
+    @foreach ($recommendedProducts as $product)
+        <div class="col-md-3">
+            <div class="card">
+                <img src="{{ asset('storage/' . $product->gambar) }}" class="card-img-top" alt="{{ $product->nama_produk }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ $product->nama_produk }}</h5>
+                    <p class="card-text">Rp {{ number_format($product->harga, 0, ',', '.') }}</p>
+                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary">Lihat Produk</a>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+
     <!-- Tombol Tambah Produk -->
     <div class="d-flex justify-content-end mb-4">
         <a href="{{ route('products.create') }}" class="btn btn-primary">
             <i class="fas fa-plus-circle me-2"></i>Tambah Produk
         </a>
     </div>
+
 
     <!-- Tabel Produk -->
     <div class="card">

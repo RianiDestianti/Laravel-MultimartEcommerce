@@ -13,15 +13,36 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::query();
-
+    
         if ($request->has('search')) {
             $search = $request->search;
             $query->where('nama_produk', 'like', "%$search%");
+    
+            // Simpan pencarian ke database jika user login
+            if (auth()->check()) {
+                \App\Models\SearchHistory::create([
+                    'user_id' => auth()->id(),
+                    'keyword' => $search,
+                ]);
+            }
         }
-
+    
         $products = $query->paginate(5)->appends(['search' => $request->search]);
-        return view('products.index', compact('products'));
+    
+        // Ambil rekomendasi berdasarkan pencarian terakhir user
+        $recommendedProducts = [];
+        if (auth()->check()) {
+            $lastSearch = \App\Models\SearchHistory::where('user_id', auth()->id())->latest()->first();
+            if ($lastSearch) {
+                $recommendedProducts = Product::where('nama_produk', 'like', "%{$lastSearch->keyword}%")
+                                    ->limit(5)
+                                    ->get();
+            }
+        }
+    
+        return view('products.index', compact('products', 'recommendedProducts'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -171,5 +192,31 @@ public function updateCategory(Request $request, $id)
 
     return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui!');
 }
+
+public function getRecommendations()
+{
+    $user = auth()->user();
+
+    if (!$user) {
+        return []; // Jika user tidak login, tidak ada rekomendasi
+    }
+
+    // Ambil keyword pencarian terakhir user
+    $lastSearch = \App\Models\SearchHistory::where('user_id', $user->id)
+                    ->latest()
+                    ->first();
+
+    if (!$lastSearch) {
+        return []; // Jika belum pernah mencari, tidak ada rekomendasi
+    }
+
+    // Cari produk yang sesuai dengan pencarian terakhir
+    $recommendedProducts = Product::where('nama_produk', 'like', "%{$lastSearch->keyword}%")
+                                ->limit(5)
+                                ->get();
+
+    return view('products.recommendations', compact('recommendedProducts'));
+}
+
 
 }
