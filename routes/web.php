@@ -28,6 +28,7 @@ Route::post('/orders', [OrderController::class, 'store'])->name('orders.store')-
 Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay')->middleware('auth');
 
 Route::post('/api/chatbot', [ChatbotController::class, 'reply']);
+Route::post('/chatbot/reply', [ChatbotController::class, 'reply']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -36,8 +37,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/chatbot', function () {
-    return view('chatbot.chatbot'); // Sesuai dengan folder views/chatbot/
-});
+    return view('chatbot.chatbot');
+})->name('chatbot.chatbot');
+
 
 Route::get('/', function () {
     return redirect()->route('products.index');

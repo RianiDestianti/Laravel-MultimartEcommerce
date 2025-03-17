@@ -8,14 +8,11 @@
 
 @section('content')
 
-
 <div class="container mt-5">
-    <!-- Page Header with Gradient Underline -->
+    <!-- Page Header -->
     <div class="page-header text-center mb-4">
         <h2>Daftar Produk</h2>
     </div>
-
-    
 
     <!-- Success Message -->
     @if(session('success'))
@@ -32,7 +29,6 @@
         </a>
     </div>
 
-    
     <!-- Tabel Produk -->
     <div class="card">
         <div class="card-body">
@@ -44,6 +40,7 @@
                             <th>Harga</th>
                             <th>Deskripsi</th>
                             <th>Stok</th>
+                            <th>Kategori</th>
                             <th>Gambar</th>
                             <th>Aksi</th>
                         </tr>
@@ -56,6 +53,10 @@
                             <td class="align-middle">{{ Str::limit($product->deskripsi, 50) }}</td>
                             <td class="align-middle">{{ $product->stok }}</td>
                             <td class="align-middle">
+    {{ $product->category ? $product->category->nama_kategori : '-' }}
+</td>
+
+                            <td class="align-middle">
                                 @if ($product->gambar)
                                     <img src="{{ Storage::url($product->gambar) }}" class="img-thumbnail" width="80" alt="Gambar Produk">
                                 @else
@@ -63,40 +64,38 @@
                                 @endif
                             </td>
                             <td class="align-middle">
-    <form action="{{ route('wishlist.store') }}" method="POST">
-        @csrf
-        <input type="hidden" name="product_id" value="{{ $product->id }}">
-        <button type="submit" class="btn btn-outline-danger btn-sm">
-            <i class="fas fa-heart"></i> Wishlist
-        </button>
-    </form>
-    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning mb-1">
-        <i class="fas fa-edit me-1"></i>Edit
-    </a>
-    <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-        class="d-inline"
-        onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger">
-            <i class="fas fa-trash me-1"></i>Hapus
-        </button>
-    </form>
-    <form action="{{ route('orders.store') }}" method="POST">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $product->id }}">
-    <input type="number" name="jumlah" value="1" min="1" class="form-control mb-2">
-    <button type="submit" class="btn btn-success btn-sm">
-        <i class="fas fa-shopping-cart"></i> Beli Sekarang
-    </button>
-</form>
-
-</td>
-
+                                <form action="{{ route('wishlist.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="fas fa-heart"></i> Wishlist
+                                    </button>
+                                </form>
+                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning mb-1">
+                                    <i class="fas fa-edit me-1"></i>Edit
+                                </a>
+                                <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                    class="d-inline"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash me-1"></i>Hapus
+                                    </button>
+                                </form>
+                                <form action="{{ route('orders.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="number" name="jumlah" value="1" min="1" class="form-control mb-2">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center py-4">
+                            <td colspan="7" class="text-center py-4">
                                 <i class="fas fa-box-open fa-3x mb-3 text-muted"></i>
                                 <p class="text-muted">Belum ada produk tersedia</p>
                             </td>

@@ -21,34 +21,39 @@ class ChatbotController extends Controller
     }
 
     private function checkStock($message)
-    {
-        $productName = preg_replace('/(stok|berapa|\?)/', '', $message);
-        $productName = trim($productName);
+{
+    $productName = preg_replace('/(stok|berapa|\?)/', '', $message);
+    $productName = trim($productName);
 
-        Log::info("Mencari stok untuk: " . $productName);
+    Log::info("Mencari stok untuk: '" . $productName . "'");
 
-        $product = Product::where('nama_produk', 'LIKE', "%$productName%")->first();
+    $product = Product::where('nama_produk', 'LIKE', "%$productName%")->first();
 
-        if ($product) {
-            return response()->json(['reply' => "Stok {$product->nama_produk} tersisa {$product->stok}"]);
-        }
-
-        return response()->json(['reply' => 'Produk tidak ditemukan.']);
+    if ($product) {
+        Log::info("Produk ditemukan: " . json_encode($product));
+        return response()->json(['reply' => "Stok {$product->nama_produk} tersisa {$product->stok}"]);
     }
 
-    private function checkPrice($message)
-    {
-        $productName = preg_replace('/(harga|berapa|\?)/', '', $message);
-        $productName = trim($productName);
+    Log::error("Produk tidak ditemukan: '" . $productName . "'");
+    return response()->json(['reply' => 'Produk tidak ditemukan.']);
+}
 
-        Log::info("Mencari harga untuk: " . $productName);
+private function checkPrice($message)
+{
+    $productName = preg_replace('/(harga|berapa|\?)/', '', $message);
+    $productName = trim($productName);
 
-        $product = Product::where('nama_produk', 'LIKE', "%$productName%")->first();
+    Log::info("Mencari harga untuk: '" . $productName . "'");
 
-        if ($product) {
-            return response()->json(['reply' => "Harga {$product->nama_produk} adalah Rp " . number_format($product->harga, 0, ',', '.')]);
-        }
+    $product = Product::where('nama_produk', 'LIKE', "%$productName%")->first();
 
-        return response()->json(['reply' => 'Produk tidak ditemukan.']);
+    if ($product) {
+        Log::info("Produk ditemukan: " . json_encode($product));
+        return response()->json(['reply' => "Harga {$product->nama_produk} adalah Rp " . number_format($product->harga, 0, ',', '.')]);
     }
+
+    Log::error("Produk tidak ditemukan: '" . $productName . "'");
+    return response()->json(['reply' => 'Produk tidak ditemukan.']);
+}
+
 }

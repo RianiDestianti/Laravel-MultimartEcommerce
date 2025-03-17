@@ -11,10 +11,16 @@ class Product extends Model
 
     protected $table = 'products'; 
 
-    protected $fillable = ['nama_produk', 'harga', 'deskripsi', 'stok']; 
+    protected $fillable = ['nama_produk', 'harga', 'deskripsi', 'stok', 'kategori_id'];
+
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
+    public function category()
+{
+    return $this->belongsTo(Category::class, 'kategori_id');
+}
+
     
 }
