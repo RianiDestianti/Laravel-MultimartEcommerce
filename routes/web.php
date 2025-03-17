@@ -23,6 +23,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/products/akun', [AuthController::class, 'profile'])->name('products.akun')->middleware('auth');
 
+Route::get('/categories/{id}/edit', [ProductController::class, 'editCategory'])->name('categories.edit');
+Route::put('/categories/{id}', [ProductController::class, 'updateCategory'])->name('categories.update');
+
+
 Route::get('/products/riwayat', [OrderController::class, 'riwayat'])->name('products.riwayat')->middleware('auth');
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store')->middleware('auth');
 Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay')->middleware('auth');

@@ -152,4 +152,24 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
     }
+    public function editCategory($id)
+{
+    $category = Category::findOrFail($id);
+    return view('categories.edit', compact('category'));
+}
+
+public function updateCategory(Request $request, $id)
+{
+    $request->validate([
+        'nama_kategori' => 'required|string|unique:categories,nama_kategori,' . $id
+    ]);
+
+    $category = Category::findOrFail($id);
+    $category->update([
+        'nama_kategori' => $request->nama_kategori
+    ]);
+
+    return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui!');
+}
+
 }
