@@ -32,7 +32,9 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ $product->nama_produk }}</h5>
                     <p class="card-text">Rp {{ number_format($product->harga, 0, ',', '.') }}</p>
-                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary">Lihat Produk</a>
+                    <a href="{{ route('products.riwayat', $product->id) }}" class="btn btn-primary">Lihat Produk</a>
+                    <!-- <a href="{{ route('products.riwayat') }}" class="btn btn-primary">Lihat Produk</a> -->
+
                 </div>
             </div>
         </div>
@@ -107,6 +109,14 @@
                                     <input type="number" name="jumlah" value="1" min="1" class="form-control mb-2">
                                     <button type="submit" class="btn btn-success btn-sm">
                                         <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                                    </button>
+                                </form>
+                                <form action="{{ route('orders.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="number" name="jumlah" value="1" min="1" class="form-control mb-2">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-eye"></i> LIhat Produk
                                     </button>
                                 </form>
                             </td>
