@@ -78,7 +78,7 @@
 
                             <td class="align-middle">
                                 @if ($product->gambar)
-                                    <img src="{{ Storage::url($product->gambar) }}" class="img-thumbnail" width="80" alt="Gambar Produk">
+                                    <img src="{{ asset('storage/uploads/' . $product->gambar)  }}" class="img-thumbnail" width="80" >
                                 @else
                                     <span class="badge bg-secondary">Tidak ada gambar</span>
                                 @endif

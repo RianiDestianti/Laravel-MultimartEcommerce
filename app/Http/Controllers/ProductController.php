@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProductController extends Controller
 {
@@ -27,7 +29,7 @@ class ProductController extends Controller
         }
     }
 
-    $products = $query->paginate(5)->appends(['search' => $request->search]);
+    $products = $query->latest()->paginate(5)->appends(['search' => $request->search]);
 
     // Ambil rekomendasi berdasarkan pencarian terakhir user
     $recommendedProducts = [];
@@ -36,7 +38,8 @@ class ProductController extends Controller
         if ($lastSearch) {
             $recommendedProducts = Product::where('nama_produk', 'like', "%{$lastSearch->keyword}%")
                                 ->limit(5)
-                                ->get();
+                                ->get()
+                                ;
         }
     }
 
@@ -57,41 +60,50 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'harga' => 'required|numeric',
-            'deskripsi' => 'required|string',
-            'stok' => 'required|integer',
-            'kategori_id' => 'nullable|string',
-            'kategori_baru' => 'nullable|string|max:255',
+{
+    $request->validate([
+        'nama_produk' => 'required|string|max:255',
+        'harga' => 'required|numeric',
+        'deskripsi' => 'required|string',
+        'stok' => 'required|integer',
+        'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        'kategori_id' => 'nullable|string',
+        'kategori_baru' => 'nullable|string|max:255',
+    ]);
+
+    // Cek apakah user menambahkan kategori baru
+    if ($request->kategori_id == "new" && !empty($request->kategori_baru)) {
+        $kategori = Category::create([
+            'nama_kategori' => $request->kategori_baru
         ]);
-    
-        // Cek apakah user menambahkan kategori baru
-        if ($request->kategori_id == "new" && !empty($request->kategori_baru)) {
-            // Simpan kategori baru ke database
-            $kategori = Category::create([
-                'nama_kategori' => $request->kategori_baru
-            ]);
-    
-            // Gunakan ID kategori baru untuk produk
-            $kategori_id = $kategori->id;
-        } else {
-            // Gunakan kategori yang dipilih
-            $kategori_id = $request->kategori_id;
-        }
-    
-        // Simpan produk baru
-        Product::create([
-            'nama_produk' => $request->nama_produk,
-            'harga' => $request->harga,
-            'deskripsi' => $request->deskripsi,
-            'stok' => $request->stok,
-            'kategori_id' => $kategori_id,
-        ]);
-    
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan');
+
+        $kategori_id = $kategori->id;
+    } else {
+        $kategori_id = $request->kategori_id;
     }
+
+    if ($request->hasFile('gambar')) {
+        $file = $request->file('gambar');
+        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+        $path = Storage::disk('public')->putFileAs('uploads', $file, $filename);
+        $gambarPath = $filename; 
+    } else {
+        return redirect()->back()->with('error', 'Image is required');
+    }
+
+    // Simpan produk baru
+    Product::create([
+        'nama_produk' => $request->nama_produk,
+        'harga' => $request->harga,
+        'deskripsi' => $request->deskripsi,
+        'stok' => $request->stok,
+        'gambar' => $gambarPath, 
+        'kategori_id' => $kategori_id,
+    ]);
+
+    return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan');
+}
+
     
     
 

@@ -11,7 +11,7 @@ class Product extends Model
 
     protected $table = 'products'; 
 
-    protected $fillable = ['nama_produk', 'harga', 'deskripsi', 'stok', 'kategori_id'];
+    protected $fillable = ['nama_produk', 'harga', 'deskripsi', 'stok','gambar', 'kategori_id'];
 
     public function orders()
     {
