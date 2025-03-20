@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     // Tampilkan halaman register
+
+
+    
     public function showRegister()
     {
         return view('auth.register');

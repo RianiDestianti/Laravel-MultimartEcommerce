@@ -165,6 +165,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -208,6 +209,16 @@
                     </a>
                 </li>
             </ul>
+            @auth
+                    @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}" class="btn btn-light btn-sm ms-3">Dashboard Admin</a>
+                    @endif
+                    <a href="{{ route('logout') }}" class="btn btn-danger btn-sm ms-3"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                @endauth
         </div>
     </div>
 </nav>

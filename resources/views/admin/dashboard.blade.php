@@ -9,7 +9,10 @@
 
     <div class="mt-4">
         <a href="{{ route('products.index') }}" class="btn btn-primary">Kelola Produk</a>
-        <a href="{{ route('users.index') }}" class="btn btn-secondary">Kelola Pengguna</a>
+        
+
+
+        
         <a href="{{ route('logout') }}" class="btn btn-danger"
            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             Logout
