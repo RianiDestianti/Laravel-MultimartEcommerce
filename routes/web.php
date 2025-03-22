@@ -10,6 +10,27 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\AdminController;
 
+use App\Http\Controllers\PasswordController;
+Route::middleware(['auth'])->group(function () {
+    Route::post('/update-password', [PasswordController::class, 'update'])->name('password.update.manual');
+});
+
+
+// Rute untuk update password manual
+Route::post('/update-password', [PasswordController::class, 'update'])->name('password.update.manual');
+
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::post('/admin/users/{id}/toggle-block', [AdminUserController::class, 'toggleBlock'])->name('admin.users.toggleBlock');
+    Route::get('/admin/users/{id}/activity', [AdminUserController::class, 'activityLog'])->name('admin.users.activity');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+});
+
 
 Route::resource('products', ProductController::class)->except(['show']);
 Route::get('/products/akun', [AuthController::class, 'profile'])->name('products.akun')->middleware('auth');
@@ -23,17 +44,6 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-
-
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-});
-
 
 
 

@@ -253,7 +253,7 @@
     <div class="container mt-4">
         @if(!request()->routeIs('products.index'))
         <div class="page-header">
-            <h2>@yield('page-title', 'Judul Halaman')</h2>
+            <h2>@yield('page-title')</h2>
         </div>
         @endif
         

@@ -16,8 +16,8 @@
                         <th>Nama Produk</th>
                         <th>Jumlah</th>
                         <th>Total Harga</th>
-                        <th>Status</th>
-                        <th>Tanggal</th>
+                        {{-- <th>Status</th>
+                        <th>Tanggal</th> --}}
                     </tr>
                 </thead>
                 <tbody>
