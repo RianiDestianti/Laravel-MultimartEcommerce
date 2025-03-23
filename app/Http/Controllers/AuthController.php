@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -43,32 +44,56 @@ class AuthController extends Controller
     }
 
     // Proses login
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-    
-        $user = User::where('email', $request->email)->first();
-    
-        if ($user && $user->is_blocked) {
-            if ($user->blocked_until && now()->lt($user->blocked_until)) {
-                return back()->withErrors(['email' => 'Akun Anda diblokir hingga ' . $user->blocked_until]);
-            } else {
-                // Jika waktu blokir telah habis, buka blokir otomatis
-                $user->update(['is_blocked' => false, 'blocked_until' => null]);
-            }
+    // Proses login
+// Proses login
+// Proses login
+
+
+public function login(Request $request)
+{
+    // Validasi input email dan password
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    // Cari user berdasarkan email
+    $user = User::where('email', $request->email)->first();
+
+    if ($user) {
+        // **Cek apakah user ada dan diblokir**
+        if ($user->is_blocked && $user->blocked_until && now()->lt(Carbon::parse($user->blocked_until))) {
+            // Arahkan ke halaman blokir jika akun masih diblokir
+            return response()->view('auth.blocked', [
+                'blocked_until' => Carbon::parse($user->blocked_until)->format('d M Y H:i'),
+                'message' => 'Akun Anda telah diblokir hingga '
+            ]);
         }
-    
-        if (Auth::attempt($credentials)) {
-            Auth::user()->update(['last_login_at' => now()]);
-            return redirect()->route('products.index')->with('success', 'Login berhasil!');
+
+        // Jika waktu blokir telah habis, buka blokir otomatis
+        if ($user->is_blocked && $user->blocked_until && now()->gte(Carbon::parse($user->blocked_until))) {
+            // Reset status blokir
+            $user->update(['is_blocked' => false, 'blocked_until' => null]);
         }
-    
-        return back()->withErrors(['email' => 'Email atau password salah!']);
     }
-    
+
+    // Jika login berhasil dan akun tidak diblokir
+    if (Auth::attempt($credentials)) {
+        // Update waktu login terakhir
+        Auth::user()->update(['last_login_at' => now()]);
+        return redirect()->route('products.index')->with('success', 'Login berhasil!');
+    }
+
+    // Jika login gagal, kembalikan dengan error
+    return back()->withErrors(['email' => 'Email atau password salah!']);
+}
+
+
+
+
+
+
+
     
 
     // Logout
@@ -87,6 +112,23 @@ public function profile()
 {
     $user = Auth::user(); // Ambil data user yang sedang login
     return view('products.akun', compact('user'));
+}
+protected function attemptLogin(Request $request)
+{
+    $user = \App\Models\User::where('email', $request->email)->first();
+
+    if ($user) {
+        // Cek apakah pengguna diblokir
+        if ($user->is_blocked && now()->lessThan($user->blocked_until)) {
+            // Jika masih dalam masa blokir, tolak login
+            return false;
+        }
+    }
+
+    return $this->guard()->attempt(
+        $this->credentials($request),
+        $request->filled('remember')
+    );
 }
 
 

@@ -14,6 +14,21 @@ use App\Http\Controllers\AdminUserController;
 
 use App\Http\Controllers\PasswordController;
 
+
+
+Route::middleware(['auth', 'checkuserblocked'])->group(function () {
+    // Rute yang hanya bisa diakses oleh pengguna yang tidak diblokir
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
+
+
+Route::get('auth/blocked', function () {
+    return view('auth.blocked');
+})->name('auth.blocked');
+
+
+
 Route::post('/admin/toggle-block/{id}', [AdminController::class, 'toggleBlock'])->name('admin.toggleBlock');
 Route::get('/admin/delete-user', [AdminController::class, 'deleteUserPage'])->name('admin.delete_user');
 Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
