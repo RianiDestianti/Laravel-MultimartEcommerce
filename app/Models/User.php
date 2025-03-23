@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role', // Tambahkan role
+        'last_login_at', // Pastikan last_login_at ada di sini
     ];
 
     /**
@@ -45,8 +46,10 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_login_at' => 'datetime', // Tambahkan ini
         ];
     }
+    
     public function wishlists()
 {
     return $this->hasMany(Wishlist::class);

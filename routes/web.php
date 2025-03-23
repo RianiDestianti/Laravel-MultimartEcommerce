@@ -9,8 +9,13 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminUserController;
+
 
 use App\Http\Controllers\PasswordController;
+
+Route::get('/admin/logged-in-users', [AdminUserController::class, 'loggedInUsers'])->name('admin.loggedin_users');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/update-password', [PasswordController::class, 'update'])->name('password.update.manual');
 });
@@ -21,7 +26,7 @@ Route::post('/update-password', [PasswordController::class, 'update'])->name('pa
 
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.dashboard');
     Route::post('/admin/users/{id}/toggle-block', [AdminUserController::class, 'toggleBlock'])->name('admin.users.toggleBlock');
     Route::get('/admin/users/{id}/activity', [AdminUserController::class, 'activityLog'])->name('admin.users.activity');
 });
