@@ -14,16 +14,23 @@ use App\Http\Controllers\AdminUserController;
 
 use App\Http\Controllers\PasswordController;
 
+Route::post('/admin/toggle-block/{id}', [AdminController::class, 'toggleBlock'])->name('admin.toggleBlock');
+Route::get('/admin/delete-user', [AdminController::class, 'deleteUserPage'])->name('admin.delete_user');
+Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+
+
 Route::get('/admin/logged-in-users', [AdminUserController::class, 'loggedInUsers'])->name('admin.loggedin_users');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/update-password', [PasswordController::class, 'update'])->name('password.update.manual');
 });
 
+Route::get('/admin/block-user', [AdminController::class, 'blockUserPage'])->name('admin.block_user');
 
 // Rute untuk update password manual
 Route::post('/update-password', [PasswordController::class, 'update'])->name('password.update.manual');
 
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.dashboard');

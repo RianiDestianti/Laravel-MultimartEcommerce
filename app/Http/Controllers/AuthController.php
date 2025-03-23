@@ -50,23 +50,25 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
     
+        $user = User::where('email', $request->email)->first();
+    
+        if ($user && $user->is_blocked) {
+            if ($user->blocked_until && now()->lt($user->blocked_until)) {
+                return back()->withErrors(['email' => 'Akun Anda diblokir hingga ' . $user->blocked_until]);
+            } else {
+                // Jika waktu blokir telah habis, buka blokir otomatis
+                $user->update(['is_blocked' => false, 'blocked_until' => null]);
+            }
+        }
+    
         if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-    
-            // Simpan waktu login terakhir
-            $user->update(['last_login_at' => now()]);
-    
-            session([
-                'user_id' => $user->id,
-                'user_name' => $user->name,
-                'user_email' => $user->email
-            ]);
-    
+            Auth::user()->update(['last_login_at' => now()]);
             return redirect()->route('products.index')->with('success', 'Login berhasil!');
         }
     
         return back()->withErrors(['email' => 'Email atau password salah!']);
     }
+    
     
 
     // Logout

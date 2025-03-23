@@ -17,14 +17,20 @@ class AdminUserController extends Controller
     }
 
     // Blokir atau buka blokir akun
-    public function toggleBlock($id)
-    {
-        $user = User::findOrFail($id);
-        $user->is_blocked = !$user->is_blocked;
-        $user->save();
+    public function toggleBlock(Request $request, $id)
+{
+    $user = User::findOrFail($id);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Status akun berhasil diubah.');
+    if ($user->is_blocked) {
+        $user->update(['is_blocked' => false, 'blocked_until' => null]);
+        return redirect()->route('admin.dashboard')->with('success', 'Akun berhasil dibuka kembali.');
+    } else {
+        $blockUntil = $request->input('blocked_until') ? now()->addDays($request->input('blocked_until')) : null;
+        $user->update(['is_blocked' => true, 'blocked_until' => $blockUntil]);
+        return redirect()->route('admin.dashboard')->with('success', 'Akun berhasil diblokir.');
     }
+}
+
 
     // Lihat riwayat aktivitas user
     public function activityLog($id)
