@@ -9,18 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up()
+    public function up()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->boolean('is_blocked')->default(false);
-        $table->timestamp('blocked_until')->nullable();
+        $table->text('block_reason')->nullable(); // Kolom alasan blokir
     });
 }
 
 public function down()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->dropColumn(['is_blocked', 'blocked_until']);
+        $table->dropColumn('block_reason');
     });
 }
 

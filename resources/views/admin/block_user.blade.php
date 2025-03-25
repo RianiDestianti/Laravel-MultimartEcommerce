@@ -44,11 +44,14 @@
                                 {{ $user->is_blocked == 1 ? 'Buka Blokir' : 'Blokir' }}
                             </button>
                         </form>
+                        
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
+       
+
         @else
             <p class="text-muted text-center">Tidak ada pengguna yang terdaftar.</p>
         @endif
