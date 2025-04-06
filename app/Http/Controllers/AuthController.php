@@ -63,7 +63,6 @@ public function login(Request $request)
     if ($user) {
         // **Cek apakah user ada dan diblokir**
         if ($user->is_blocked && $user->blocked_until && now()->lt(Carbon::parse($user->blocked_until))) {
-            // Arahkan ke halaman blokir jika akun masih diblokir
             return response()->view('auth.blocked', [
                 'blocked_until' => Carbon::parse($user->blocked_until)->format('d M Y H:i'),
                 'message' => 'Akun Anda telah diblokir hingga '
@@ -72,32 +71,43 @@ public function login(Request $request)
 
         // Jika waktu blokir telah habis, buka blokir otomatis
         if ($user->is_blocked && $user->blocked_until && now()->gte(Carbon::parse($user->blocked_until))) {
-            // Reset status blokir
             $user->update(['is_blocked' => false, 'blocked_until' => null]);
         }
     }
 
     // Jika login berhasil dan akun tidak diblokir
     if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+
+        // Simpan data user ke dalam session
+        session([
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_email' => $user->email,
+        ]);
+
         // Update waktu login terakhir
-        Auth::user()->update(['last_login_at' => now()]);
+        $user->update(['last_login_at' => now()]);
+
         return redirect()->route('products.index')->with('success', 'Login berhasil!');
     }
 
-    // Jika login gagal, kembalikan dengan error
     return back()->withErrors(['email' => 'Email atau password salah!']);
 }
 
+// Menampilkan profil pengguna
+public function profile()
+{
+    if (!session()->has('user_id')) {
+        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+    }
 
+    $user = User::find(session('user_id')); 
+    return view('products.akun', compact('user'));
+}
 
-
-
-
-
-    
-
-    // Logout
-    public function logout()
+// Logout
+public function logout()
 {
     // Hapus semua session
     session()->flush();
@@ -106,29 +116,6 @@ public function login(Request $request)
     Auth::logout();
 
     return redirect()->route('login')->with('success', 'Logout berhasil!');
-}
-
-public function profile()
-{
-    $user = Auth::user(); // Ambil data user yang sedang login
-    return view('products.akun', compact('user'));
-}
-protected function attemptLogin(Request $request)
-{
-    $user = \App\Models\User::where('email', $request->email)->first();
-
-    if ($user) {
-        // Cek apakah pengguna diblokir
-        if ($user->is_blocked && now()->lessThan($user->blocked_until)) {
-            // Jika masih dalam masa blokir, tolak login
-            return false;
-        }
-    }
-
-    return $this->guard()->attempt(
-        $this->credentials($request),
-        $request->filled('remember')
-    );
 }
 
 

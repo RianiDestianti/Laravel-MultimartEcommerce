@@ -22,6 +22,7 @@ class AdminUserController extends Controller
     $user = User::findOrFail($id);
 
     if ($user->is_blocked) {
+        
         $user->update(['is_blocked' => false, 'blocked_until' => null]);
         return redirect()->route('admin.dashboard')->with('success', 'Akun berhasil dibuka kembali.');
     } else {
