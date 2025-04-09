@@ -50,4 +50,19 @@ class AdminController extends Controller
         $user->save();
         return redirect()->back()->with('success', 'Status pengguna berhasil diperbarui.');
     }
+
+    public function delete_user()
+{
+    $users = User::all(); // Ambil semua pengguna
+    return view('admin.delete_user', compact('users')); // Tampilkan view dengan daftar pengguna
+}
+
+public function delete_user_action($id)
+{
+    $user = User::findOrFail($id); // Cari pengguna berdasarkan ID
+    $user->delete(); // Hapus pengguna
+
+    return redirect()->route('admin.delete_user')->with('success', 'Pengguna berhasil dihapus.');
+}
+
 }

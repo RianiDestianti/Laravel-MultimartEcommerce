@@ -32,17 +32,20 @@ class ProductController extends Controller
     $products = $query->latest()->paginate(5)->appends(['search' => $request->search]);
 
     // Ambil rekomendasi berdasarkan pencarian terakhir user
-    $recommendedProducts = [];
-    if (auth()->check()) {
-        $lastSearch = \App\Models\SearchHistory::where('user_id', auth()->id())->latest()->first();
-        if ($lastSearch) {
-            $recommendedProducts = Product::where('nama_produk', 'like', "%{$lastSearch->keyword}%")
-                                ->limit(5)
-                                ->get()
-                                ;
-        }
-    }
+    $recommendedProducts = collect();
 
+if (auth()->check()) {
+    $searchHistories = \App\Models\SearchHistory::where('user_id', auth()->id())
+                        ->pluck('keyword');
+
+    if ($searchHistories->isNotEmpty()) {
+        $recommendedProducts = Product::where(function ($query) use ($searchHistories) {
+            foreach ($searchHistories as $keyword) {
+                $query->orWhere('nama_produk', 'like', "%{$keyword}%");
+            }
+        })->limit(10)->get(); // Bisa kamu ubah jadi 5, 10, dll sesuai selera
+    }
+}
     return view('products.index', compact('products', 'recommendedProducts'));
 }
 

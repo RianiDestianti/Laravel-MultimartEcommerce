@@ -30,7 +30,8 @@ Route::get('auth/blocked', function () {
 
 
 Route::post('/admin/toggle-block/{id}', [AdminController::class, 'toggleBlock'])->name('admin.toggleBlock');
-Route::get('/admin/delete-user', [AdminController::class, 'deleteUserPage'])->name('admin.delete_user');
+// Route untuk halaman daftar pengguna yang dapat dihapus
+Route::get('/admin/delete-user', [AdminController::class, 'delete_user'])->name('admin.delete_user');
 Route::delete('/admin/delete-user/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 
 
@@ -58,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
 });
 
+// Route untuk menghapus pengguna berdasarkan ID
+Route::delete('/admin/delete-user/{id}', [AdminController::class, 'delete_user_action'])->name('admin.delete_user_action');
 
 Route::resource('products', ProductController::class)->except(['show']);
 Route::get('/products/akun', [AuthController::class, 'profile'])->name('products.akun')->middleware('auth');

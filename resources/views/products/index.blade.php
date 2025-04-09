@@ -33,13 +33,12 @@
                     <h5 class="card-title">{{ $product->nama_produk }}</h5>
                     <p class="card-text">Rp {{ number_format($product->harga, 0, ',', '.') }}</p>
                     <a href="{{ route('products.riwayat', $product->id) }}" class="btn btn-primary">Lihat Produk</a>
-                    <!-- <a href="{{ route('products.riwayat') }}" class="btn btn-primary">Lihat Produk</a> -->
-
                 </div>
             </div>
         </div>
     @endforeach
 </div>
+
 
     <!-- Tombol Tambah Produk -->
     <div class="d-flex justify-content-end mb-4">

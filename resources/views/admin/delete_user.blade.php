@@ -28,7 +28,7 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
-                        <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
+                        <form action="{{ route('admin.delete_user_action', $user->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">🗑 Hapus</button>
