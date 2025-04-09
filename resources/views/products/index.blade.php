@@ -7,13 +7,11 @@
 @endsection
 
 @section('content')
-
 <div class="container mt-5">
     <!-- Page Header -->
     <div class="page-header text-center mb-4">
         <h2>Daftar Produk</h2>
     </div>
-
     <!-- Success Message -->
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -21,7 +19,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
-
 
     <h2>🔥 Rekomendasi untuk Kamu</h2>
 <div class="row">
@@ -39,14 +36,12 @@
     @endforeach
 </div>
 
-
     <!-- Tombol Tambah Produk -->
     <div class="d-flex justify-content-end mb-4">
         <a href="{{ route('products.create') }}" class="btn btn-primary">
             <i class="fas fa-plus-circle me-2"></i>Tambah Produk
         </a>
     </div>
-
 
     <!-- Tabel Produk -->
     <div class="card">
@@ -133,7 +128,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">
         {{ $products->links() }}

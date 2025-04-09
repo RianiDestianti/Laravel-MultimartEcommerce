@@ -13,7 +13,19 @@ use App\Http\Controllers\AdminUserController;
 
 
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\SaldoController;
 
+
+Route::get('/orders/struk/download/{order}', [OrderController::class, 'downloadStruk'])->name('orders.struk.download');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/isi-saldo', [SaldoController::class, 'form'])->name('saldo.form');
+    Route::post('/isi-saldo', [SaldoController::class, 'isi'])->name('saldo.isi');
+});
+
+
+Route::post('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
 
 
 Route::middleware(['auth', 'checkuserblocked'])->group(function () {

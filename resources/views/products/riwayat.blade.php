@@ -16,29 +16,32 @@
                         <th>Nama Produk</th>
                         <th>Jumlah</th>
                         <th>Total Harga</th>
-                        {{-- <th>Status</th>
-                        <th>Tanggal</th> --}}
+                        <th>Bayar</th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($orders as $order)
-<tr>
-    <td>{{ $order->product->nama_produk }}</td>
-    <td>Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
-    <td>
-        @if ($order->status == 'pending')
-            <form action="{{ route('orders.pay', $order->id) }}" method="POST">
-                @csrf
-                <input type="number" name="nominal_bayar" class="form-control" min="1" required>
-                <button type="submit" class="btn btn-primary btn-sm mt-2">Bayar</button>
-            </form>
-        @else
-            <span class="badge bg-success">Sudah Dibayar</span>
-        @endif
-    </td>
-</tr>
-@endforeach
-
+                    @foreach ($orders as $order)
+                    <tr>
+                        <td>{{ $order->product->nama_produk }}</td>
+                        <td>{{ $order->jumlah }}</td>
+                        <td>Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
+                        <td>
+                            @if (auth()->user()->saldo >= $order->total_harga)
+                            <form action="{{ route('orders.pay', $order->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-primary btn-sm">Bayar</button>
+                            </form>
+                            
+                            <a href="{{ route('orders.struk.download', $order->id) }}" class="btn btn-secondary btn-sm mt-1">
+                                Download Struk
+                            </a>
+                            
+                            @else
+                                <span class="badge bg-danger">Saldo Tidak Cukup</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

@@ -203,6 +203,9 @@
                         <i class="fas fa-comments me-1"></i> Chatbot
                     </a>
                 </li>
+                <li><a class="dropdown-item" href="{{ route('saldo.form') }}">💳 Isi Saldo</a></li>
+                {{-- <span class="badge bg-success">Saldo: Rp {{ number_format(auth()->user()->saldo, 0, ',', '.') }}</span> --}}
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('products.akun') }}">
                         <i class="fas fa-user-circle me-1"></i> Akun
