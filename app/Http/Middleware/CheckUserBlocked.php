@@ -30,7 +30,8 @@ class CheckUserBlocked
             }
         }
 
-        // Jika tidak diblokir atau masa blokir sudah lewat, lanjutkan permintaan
+        // Jika tidak diblokir 
+        // atau masa blokir sudah lewat, lanjutkan permintaan
         return $next($request);
     }
 }

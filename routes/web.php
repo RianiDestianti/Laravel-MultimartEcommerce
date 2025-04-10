@@ -138,5 +138,5 @@ Route::get('/get-product-info', function (Request $request) {
 
 
 // Route::middleware(['auth', 'admin'])->group(function () {
-//     Route::get('/admin/dashboard', [AuthController::class, 'index'])->name('admin.dashboard');
+//     Route::get('/admin/dashboard', [AuthController::class, ' '])->name('admin.dashboard');
 // });

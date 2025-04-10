@@ -241,8 +241,11 @@
     <p style="color: green;">{{ session('success') }}</p>
 @endif
 
-<h1>Selamat datang, {{ session('user_name') }}</h1>
-            <h1 class="display-4 mb-3">Selamat Datang di MultiMart</h1>
+@auth
+    <h1>Selamat datang, {{ Auth::user()->name }}</h1>
+@else
+    <h1>Selamat datang di MultiMart</h1>
+@endauth
             
             <p class="lead mb-4">Temukan berbagai produk berkualitas dengan harga terbaik</p>
             <form action="{{ route('products.index') }}" method="GET" class="mb-3 d-flex">

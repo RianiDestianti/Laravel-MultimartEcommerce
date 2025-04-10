@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use session;
+use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Cookie;
+
 
 class AuthController extends Controller
 {
@@ -49,51 +52,36 @@ class AuthController extends Controller
 // Proses login
 
 
-public function login(Request $request)
-{
-    // Validasi input email dan password
+public function login(Request $request) {
     $credentials = $request->validate([
         'email' => 'required|email',
         'password' => 'required',
     ]);
-
-    // Cari user berdasarkan email
+    $remember = $request->has('remember');
+    if(Auth::attempt($credentials, $remember)){
+        $request->session()->regenerate();
+        return redirect()->route('products.index');
+    }
     $user = User::where('email', $request->email)->first();
-
     if ($user) {
-        // **Cek apakah user ada dan diblokir**
         if ($user->is_blocked && $user->blocked_until && now()->lt(Carbon::parse($user->blocked_until))) {
             return response()->view('auth.blocked', [
                 'blocked_until' => Carbon::parse($user->blocked_until)->format('d M Y H:i'),
-                'message' => 'Akun Anda telah diblokir hingga '
+                'message'       => 'Akun Anda telah diblokir hingga ',
             ]);
         }
-
-        // Jika waktu blokir telah habis, buka blokir otomatis
         if ($user->is_blocked && $user->blocked_until && now()->gte(Carbon::parse($user->blocked_until))) {
             $user->update(['is_blocked' => false, 'blocked_until' => null]);
+            // Try again?
+            if(Auth::attempt($credentials, $remember)){
+                $request->session()->regenerate();
+                return redirect()->route('products.index');
+            }
         }
     }
-
-    // Jika login berhasil dan akun tidak diblokir
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-
-        // Simpan data user ke dalam session
-        session([
-            'user_id' => $user->id,
-            'user_name' => $user->name,
-            'user_email' => $user->email,
-        ]);
-
-        // Update waktu login terakhir
-        $user->update(['last_login_at' => now()]);
-
-        return redirect()->route('products.index')->with('success', 'Login berhasil!');
-    }
-
     return back()->withErrors(['email' => 'Email atau password salah!']);
 }
+
 
 // Menampilkan profil pengguna
 public function profile()
