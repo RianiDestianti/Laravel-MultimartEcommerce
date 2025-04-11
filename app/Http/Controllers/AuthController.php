@@ -52,47 +52,52 @@ class AuthController extends Controller
 // Proses login
 
 
-public function login(Request $request) {
+public function login(Request $request)
+{
     $credentials = $request->validate([
         'email' => 'required|email',
         'password' => 'required',
     ]);
-    $remember = $request->has('remember');
-    if(Auth::attempt($credentials, $remember)){
-        $request->session()->regenerate();
-        return redirect()->route('products.index');
-    }
+
     $user = User::where('email', $request->email)->first();
+
     if ($user) {
-        if ($user->is_blocked && $user->blocked_until && now()->lt(Carbon::parse($user->blocked_until))) {
-            return response()->view('auth.blocked', [
-                'blocked_until' => Carbon::parse($user->blocked_until)->format('d M Y H:i'),
-                'message'       => 'Akun Anda telah diblokir hingga ',
-            ]);
-        }
-        if ($user->is_blocked && $user->blocked_until && now()->gte(Carbon::parse($user->blocked_until))) {
-            $user->update(['is_blocked' => false, 'blocked_until' => null]);
-            // Try again?
-            if(Auth::attempt($credentials, $remember)){
-                $request->session()->regenerate();
-                return redirect()->route('products.index');
+        // Cek apakah user sedang diblokir
+        if ($user->is_blocked && $user->blocked_until) {
+            $blockedUntil = Carbon::parse($user->blocked_until);
+            if (now()->lt($blockedUntil)) {
+                return response()->view('auth.blocked', [
+                    'blocked_until' => $blockedUntil->format('d M Y H:i'),
+                    'message' => 'Akun Anda telah diblokir hingga ',
+                ]);
+            } else {
+                // Blokiran selesai, unblok otomatis
+                $user->update(['is_blocked' => false, 'blocked_until' => null]);
             }
         }
     }
+
+    // Baru cek login setelah lolos blokir
+    if (Auth::attempt($credentials, $request->has('remember'))) {
+        $request->session()->regenerate();
+        return redirect()->route('products.index');
+    }
+
     return back()->withErrors(['email' => 'Email atau password salah!']);
 }
+
 
 
 // Menampilkan profil pengguna
 public function profile()
 {
-    if (!session()->has('user_id')) {
+    $user = Auth::user();
+    if (!$user) {
         return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
     }
-
-    $user = User::find(session('user_id')); 
     return view('products.akun', compact('user'));
 }
+
 
 // Logout
 public function logout()

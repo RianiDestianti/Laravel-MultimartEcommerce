@@ -16,6 +16,8 @@
 
     <button class="btn btn-primary">Submit Login</button>
 </form>
-
+<div class="mt-2">
+    <a href="{{ route('lupa.password') }}">Lupa Password?</a>
+</div>
 <a href="{{ route('register') }}">Belum punya akun? Daftar</a>
 @endsection

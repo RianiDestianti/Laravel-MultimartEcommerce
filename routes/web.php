@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminUserController;
-
-
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\SaldoController;
+
+Route::get('/lupapassword', [ForgotPasswordController::class, 'formLupaPassword'])->name('lupa.password');
+Route::post('/lupapassword', [ForgotPasswordController::class, 'cekEmail'])->name('lupa.password.cek');
 
 
 Route::get('/orders/struk/download/{order}', [OrderController::class, 'downloadStruk'])->name('orders.struk.download');
