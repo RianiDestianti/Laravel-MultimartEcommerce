@@ -100,16 +100,18 @@ public function profile()
 
 
 // Logout
-public function logout()
+public function logout(Request $request)
 {
+    // Logout dari Auth guard
+    auth('web')->logout();
+
     // Hapus semua session
-    session()->flush();
-    
-    // Logout user dari sistem
-    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
     return redirect()->route('login')->with('success', 'Logout berhasil!');
 }
+
 
 
 }

@@ -20,4 +20,14 @@
     <a href="{{ route('lupa.password') }}">Lupa Password?</a>
 </div>
 <a href="{{ route('register') }}">Belum punya akun? Daftar</a>
+
+<hr>
+<div class="mt-3">
+    <a href="{{ route('login.google') }}" class="btn btn-danger">
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" style="width:20px; margin-right:8px;">
+        Login dengan Google
+    </a>
+    
+    
+</div>
 @endsection

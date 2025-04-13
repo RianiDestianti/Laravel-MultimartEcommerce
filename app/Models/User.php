@@ -21,6 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'google_id',
         'password',
         'role', // Tambahkan role
         'last_login_at', // Pastikan last_login_at ada di sini

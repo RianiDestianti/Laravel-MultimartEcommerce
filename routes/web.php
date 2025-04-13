@@ -13,6 +13,16 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\SaldoController;
+use App\Http\Controllers\SocialiteController;
+
+
+// Login Google
+Route::get('/redirect', [SocialiteController::class, 'callback']);
+Route::get('/login/google', [SocialiteController::class, 'redirect'])->name('login.google');
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 
 Route::get('/lupapassword', [ForgotPasswordController::class, 'formLupaPassword'])->name('lupa.password');
 Route::post('/lupapassword', [ForgotPasswordController::class, 'cekEmail'])->name('lupa.password.cek');
