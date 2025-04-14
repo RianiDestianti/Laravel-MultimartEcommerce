@@ -169,62 +169,68 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="{{ route('products.index') }}">
-            <i class="fas fa-store me-2"></i>MultiMart
-        </a>
-        <button id="darkModeToggle" class="btn btn-sm text-light border-0">
-            <i class="fas fa-sun"></i>
-        </button>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('products.index') }}">
-                        <i class="fas fa-home me-1"></i> Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('products.create') }}">
-                        <i class="fas fa-cart-plus me-1"></i> Tambah Produk
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('products.riwayat') }}">
-                        <i class="fas fa-clipboard-list me-1"></i> Riwayat Pesanan
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('chatbot.chatbot') }}">
-                        <i class="fas fa-comments me-1"></i> Chatbot
-                    </a>
-                </li>
-                <li><a class="dropdown-item" href="{{ route('saldo.form') }}">💳 Isi Saldo</a></li>
-                {{-- <span class="badge bg-success">Saldo: Rp {{ number_format(auth()->user()->saldo, 0, ',', '.') }}</span> --}}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('products.akun') }}">
-                        <i class="fas fa-user-circle me-1"></i> Akun
-                    </a>
-                </li>
-            </ul>
-            @auth
-                    @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-light btn-sm ms-3">Dashboard Admin</a>
-                    @endif
-                    <a href="{{ route('logout') }}" class="btn btn-danger btn-sm ms-3"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        Logout
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-                @endauth
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('products.index') }}">
+                <i class="fas fa-store me-2"></i>MultiMart
+            </a>
+            <button id="darkModeToggle" class="btn btn-sm text-light border-0">
+                <i class="fas fa-sun"></i>
+            </button>
+    
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.index') }}">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.create') }}">
+                            <i class="fas fa-cart-plus me-1"></i> Tambah Produk
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.riwayat') }}">
+                            <i class="fas fa-clipboard-list me-1"></i> Riwayat Pesanan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('chatbot.chatbot') }}">
+                            <i class="fas fa-comments me-1"></i> Chatbot
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('saldo.form') }}">
+                            <i class="fas fa-credit-card me-1"></i> Isi Saldo
+                        </a>
+                    </li>
+                    {{-- <span class="badge bg-success">Saldo: Rp {{ number_format(auth()->user()->saldo, 0, ',', '.') }}</span> --}}
+    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.akun') }}">
+                            <i class="fas fa-user-circle me-1"></i> Akun
+                        </a>
+                    </li>
+                </ul>
+                @auth
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-light btn-sm ms-3">
+                                <i class="fas fa-tachometer-alt me-1"></i> Dashboard Admin
+                            </a>
+                        @endif
+                        <a href="{{ route('logout') }}" class="btn btn-danger btn-sm ms-3"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt me-1"></i> Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+                    @endauth
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
     @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
 @endif
